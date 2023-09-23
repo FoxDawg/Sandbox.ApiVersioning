@@ -20,9 +20,19 @@ public class ProductsService
         return Products.FirstOrDefault(o => o.Id == id);
     }
     
-    public async Task<Product?> FindProductByNameAsync(string name)
+    public async Task<IReadOnlyCollection<Product>> FindProductsByNameAsync(string name)
     {
         await Task.CompletedTask;
-        return Products.FirstOrDefault(o => o.Name.Contains(name, StringComparison.InvariantCulture));
+        return Products
+            .Where(o => o.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    
+    public async Task<IReadOnlyCollection<Product>> FindProductsByDescriptionAsync(string name)
+    {
+        await Task.CompletedTask;
+        return Products
+            .Where(o => o.Description.Contains(name, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }

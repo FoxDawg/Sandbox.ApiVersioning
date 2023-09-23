@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WebApi;
 using WebApi.Products;
@@ -22,32 +21,28 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddTransient<ProductsService>();
 builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(2.0);
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-})
+    {
+        options.DefaultApiVersion = new ApiVersion(1.0);
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
     .AddApiExplorer(options =>
-{
-    options.SubstituteApiVersionInUrl = true;
-    options.GroupNameFormat = "'v'VVV";
-    options.AssumeDefaultVersionWhenUnspecified = true;
-});;
-
+    {
+        options.SubstituteApiVersionInUrl = true;
+        options.GroupNameFormat = "'v'VVV";
+        options.AssumeDefaultVersionWhenUnspecified = true;
+    });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(options =>
-    {
-        
-    });
+    app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         var descriptions = app.DescribeApiVersions();
-
+        
         // Build a swagger endpoint for each discovered API version
         foreach (var description in descriptions)
         {
